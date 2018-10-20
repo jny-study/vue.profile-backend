@@ -14,14 +14,16 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get('/', (req, res) => {
 })
+
 app.post('/', (req, res) => {
-  console.log(req.body)
+  const userInfo = req.body
+
   MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
     const db = client.db(dbName)
-    db.collection('users').insertOne({}, (err, result) => {
-      if(err) res.json({ err: 'fuck!' })
-      client.close()
-    })
+    db.collection('users').insertOne(userInfo)
+    .then(data => res.json(data))
+    .catch(err => res.status(500).json({ msg: 'err'}))
+    client.close()
   })
 })
 
