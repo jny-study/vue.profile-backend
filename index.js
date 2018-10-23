@@ -55,9 +55,21 @@ app.get('/edit/:id', (req, res) => {
     const db = client.db(dbName)
     db.collection('users').findOne({ _id: obj_id })
     .then(data => res.json(data))
-    .catch(err => res.status(500).json({ msg: 'err'}))
+    .catch(err => res.status(500).json({ msg: 'err' }))
     client.close()
   })
+})
+app.delete('/:id', (req, res) => {
+  const { id } = req.params
+  const objId = new ObjectId(id)
+
+  MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
+    const db = client.db(dbName)
+    db.collection('users').deleteOne({ _id: objId })
+    .then(data => res.json(data))
+    .catch(err => res.status(500).json({ msg: 'err' }))
+  })
+
 })
 app.put('/:id', (req, res) => {
   const { id } = req.params
